@@ -1,11 +1,24 @@
 services:
   gistly:
-    build: .
+    build:
+      context: .
+      # Use the host's network during `docker build`.
+      # Fixes hangs on servers where Docker's embedded bridge DNS is broken
+      # (bun install stuck with "EAI_AGAIN"). Safe to remove on healthy hosts.
+      network: host
     image: gistly:latest
     container_name: gistly
     restart: unless-stopped
-    ports:
-      - "3000:3000"
+    # Share the host's network stack directly - bypasses Docker
+    # bridge/iptables entirely. Needed on servers with broken Docker
+    # networking (iptables errors, dead bridge DNS).
+    # The app is reachable directly on http://<server-ip>:3000
+    #
+    # On healthy hosts you can remove `network_mode: host` and expose
+    # the port with a mapping instead:
+    #   ports:
+    #     - "3000:3000"
+    network_mode: host
     environment:
       # Password used to sign in and create/manage gists (CHANGE IT!)
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin}

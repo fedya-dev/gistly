@@ -51,6 +51,14 @@ docker run -d --name gistly \
   gistly
 ```
 
+> **Server with broken Docker networking?** If builds hang at `bun install`
+> with `EAI_AGAIN`, or starting the container fails with iptables errors, your
+> host's Docker bridge/iptables layer is misconfigured (common on Proxmox LXC).
+> Workaround: build and run with the host network —
+> `docker buildx build --allow network.host --network host -t gistly .` and
+> `docker run --network host ...` (drop `-p 3000:3000`), or set
+> `[worker.oci] networkMode = "host"` in `/etc/docker/buildkitd.toml`.
+
 ## Environment variables
 
 | Variable          | Default              | Description                                          |
