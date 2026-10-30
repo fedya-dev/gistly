@@ -1,0 +1,22 @@
+services:
+  gistly:
+    build: .
+    image: gistly:latest
+    container_name: gistly
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      # Password used to sign in and create/manage gists (CHANGE IT!)
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin}
+      # Random string that signs the session cookie (openssl rand -hex 32)
+      AUTH_SECRET: ${AUTH_SECRET:-}
+      DATABASE_URL: file:/app/db/gistly.db
+    volumes:
+      # SQLite database lives here - survives container rebuilds
+      - gistly_data:/app/db
+      # Bind-mount alternative (files on the host):
+      # - ./data:/app/db
+
+volumes:
+  gistly_data:

@@ -1,0 +1,24 @@
+node_modules
+.next
+.git
+.gitignore
+db
+*.db
+*.log
+.env
+.env.*
+!.env.example
+
+# sandbox / local folders that are not part of the app
+upload
+download
+skills
+tests
+examples
+mini-services
+scripts
+.zscripts
+agent-ctx
+Caddyfile
+Dockerfile
+docker-compose.yml

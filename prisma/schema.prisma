@@ -1,0 +1,49 @@
+generator client {
+  provider        = "prisma-client-js"
+  binaryTargets   = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// A code snippet ("gist") created by the admin.
+// visibility: "public" (listed) | "unlisted" (link-only) | "secret" (link + token)
+model Gist {
+  id          String   @id
+  title       String
+  description String   @default("")
+  visibility  String   @default("public")
+  secretToken String   @default("")
+  views       Int      @default(0)
+  tags        Tag[]
+  files       File[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([createdAt])
+  @@index([visibility])
+}
+
+model Tag {
+  id     String @id @default(cuid())
+  name   String
+  gistId String
+  gist   Gist   @relation(fields: [gistId], references: [id], onDelete: Cascade)
+
+  @@unique([gistId, name])
+  @@index([name])
+}
+
+model File {
+  id       String @id @default(cuid())
+  gistId   String
+  gist     Gist   @relation(fields: [gistId], references: [id], onDelete: Cascade)
+  filename String
+  content  String
+  language String @default("text")
+  position Int    @default(0)
+
+  @@index([gistId])
+}
