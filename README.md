@@ -97,8 +97,10 @@ Every gist page has a **Copy link** button that copies the full, correct URL for
 
 1. Push this project to a GitHub repository.
 2. On your VPS (Hetzner, DigitalOcean, OVH, a Raspberry Pi…): `git clone` your repo.
-3. `./deploy.sh` — that's the whole deployment.
+3. `chmod +x deploy.sh && ./deploy.sh` — that's the whole deployment.
 4. Updates: `git pull && ./deploy.sh`. Your data survives in the `gistly_data` volume.
+
+Customizing (header, footer, colors, texts…): see **[CUSTOMIZE.md](CUSTOMIZE.md)** — a map of where every visible part of the app lives.
 
 ### HTTPS with a reverse proxy
 
@@ -188,9 +190,11 @@ chmod +x deploy.sh
 ### Качване в GitHub → деплой където и да е
 
 1. Качи проекта в GitHub хранилище.
-2. На сървъра: `git clone` и после `./deploy.sh`.
+2. На сървъра: `git clone` и после `chmod +x deploy.sh && ./deploy.sh`.
 3. За обновление: `git pull && ./deploy.sh`. Данните остават в тома `gistly_data`.
 4. HTTPS: насочи Caddy/Nginx (примерите по-горе) към порт `3000`.
+
+Персонализация (хедър, футър, цветове, текстове…): виж **[CUSTOMIZE.md](CUSTOMIZE.md)** — указател къде се намира всяка видима част от приложението.
 
 ### Полезно да знаеш
 

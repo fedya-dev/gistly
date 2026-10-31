@@ -17,6 +17,7 @@ import {
   Trash2,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import { copyText } from '@/lib/clipboard'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -81,12 +82,11 @@ export function GistView({ nav, id, token, onOpenLogin }: GistViewProps) {
   const isMarkdown = langInfo.id === 'markdown'
 
   const copyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href)
+    if (await copyText(window.location.href)) {
       setCopiedLink(true)
       toast.success(t('gist.linkCopied'))
       setTimeout(() => setCopiedLink(false), 1800)
-    } catch {
+    } else {
       toast.error(t('toast.error'))
     }
   }

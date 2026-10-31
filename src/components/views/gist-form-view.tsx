@@ -24,6 +24,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { useI18n } from '@/components/i18n-provider'
 import { useAuth } from '@/lib/auth-store'
 import { createGist, fetchGist, updateGist } from '@/lib/api-client'
+import { copyText } from '@/lib/clipboard'
 import { detectLanguage } from '@/lib/languages'
 import { buildGistUrl, parseTags, type Visibility } from '@/lib/gist'
 import type { Navigation } from '@/lib/use-route'
@@ -174,10 +175,9 @@ export function GistFormView({ nav, gistId }: GistFormViewProps) {
         nav.gist(gistId)
       } else {
         const { gist } = await createGist(payload)
-        try {
-          await navigator.clipboard.writeText(buildGistUrl(gist))
+        if (await copyText(buildGistUrl(gist))) {
           toast.success(t('form.createdToast'))
-        } catch {
+        } else {
           toast.success(t('form.updatedToast'))
         }
         nav.gist(gist.id, gist.visibility === 'secret' ? gist.secretToken : undefined)

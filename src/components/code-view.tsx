@@ -2,8 +2,10 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Check, Copy, WrapText } from 'lucide-react'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { copyText } from '@/lib/clipboard'
 import { useI18n } from '@/components/i18n-provider'
 
 /**
@@ -91,12 +93,11 @@ export function CodeView({
   }, [code, langKey, renderKey])
 
   const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(code)
+    if (await copyText(code)) {
       setCopied(true)
       setTimeout(() => setCopied(false), 1600)
-    } catch {
-      // Clipboard unavailable (e.g. insecure context) — select nothing, stay silent
+    } else {
+      toast.error(t('toast.error'))
     }
   }
 
