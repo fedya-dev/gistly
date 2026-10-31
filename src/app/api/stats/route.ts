@@ -62,10 +62,13 @@ export async function GET(req: NextRequest) {
         select: { id: true, title: true, createdAt: true },
       }),
       // Count newlines across all file contents directly in SQLite.
+      // NOTE: the `WHERE` lives inside the fragment — interpolating
+      // `Prisma.empty` after a bare `WHERE` yields `... Gist WHERE )`,
+      // which is a SQLite syntax error (broke the admin branch).
       db.$queryRaw<{ lines: number | null }[]>`
         SELECT SUM(LENGTH(content) - LENGTH(REPLACE(content, CHAR(10), '')) + 1) AS lines
         FROM File
-        WHERE gistId IN (SELECT id FROM Gist WHERE ${admin ? Prisma.empty : Prisma.sql`visibility = 'public'`})
+        WHERE gistId IN (SELECT id FROM Gist ${admin ? Prisma.empty : Prisma.sql`WHERE visibility = 'public'`})
       `,
     ])
 

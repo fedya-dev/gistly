@@ -121,7 +121,9 @@ export function StatsView({ nav }: StatsViewProps) {
       last = m
       if (!changed || i - lastLabelWeek < 4) return null
       lastLabelWeek = i
-      return monthFormatter.format(new Date(week[0].date + 'T00:00:00Z'))
+      // monthFormatter is a plain function (manual BG/EN month tables),
+      // not an Intl formatter — call it directly, no `.format()`.
+      return monthFormatter(new Date(week[0].date + 'T00:00:00Z'))
     })
   }, [weeks, monthFormatter])
 
