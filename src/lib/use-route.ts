@@ -15,9 +15,11 @@ export interface Route {
   q: string
   /** home tag filter */
   tag: string
+  /** insights dashboard */
+  stats: boolean
 }
 
-const EMPTY: Route = { g: '', t: '', edit: false, isNew: false, q: '', tag: '' }
+const EMPTY: Route = { g: '', t: '', edit: false, isNew: false, q: '', tag: '', stats: false }
 
 function parse(search: string): Route {
   const sp = new URLSearchParams(search)
@@ -28,6 +30,7 @@ function parse(search: string): Route {
     isNew: sp.get('new') === '1',
     q: sp.get('q') ?? '',
     tag: sp.get('tag') ?? '',
+    stats: sp.get('stats') === '1',
   }
 }
 
@@ -39,6 +42,7 @@ function routeToSearch(route: Route): string {
   if (route.isNew) sp.set('new', '1')
   if (route.q) sp.set('q', route.q)
   if (route.tag) sp.set('tag', route.tag)
+  if (route.stats) sp.set('stats', '1')
   const qs = sp.toString()
   return qs ? `/?${qs}` : '/'
 }
@@ -79,6 +83,7 @@ export interface Navigation {
   gist: (id: string, token?: string) => void
   newGist: () => void
   editGist: (id: string) => void
+  stats: () => void
   backHome: () => void
 }
 
@@ -92,6 +97,11 @@ export function useAppRoute() {
     },
     []
   )
+
+  const stats = useCallback(() => {
+    navigateToSearch(routeToSearch({ ...EMPTY, stats: true }))
+    window.scrollTo({ top: 0 })
+  }, [])
 
   const gist = useCallback((id: string, token?: string) => {
     navigateToSearch(routeToSearch({ ...EMPTY, g: id, t: token ?? '' }))
@@ -110,7 +120,7 @@ export function useAppRoute() {
 
   const backHome = useCallback(() => home(), [home])
 
-  return { route, nav: { home, gist, newGist, editGist, backHome } as Navigation }
+  return { route, nav: { home, gist, newGist, editGist, stats, backHome } as Navigation }
 }
 
 /** True once the app is running on the client (SSR-safe, no effects). */

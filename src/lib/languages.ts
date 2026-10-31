@@ -83,6 +83,16 @@ const NAME_MAP: Record<string, LanguageInfo> = {
 
 export const TEXT_LANGUAGE: LanguageInfo = { id: 'text', label: 'Plain text', color: '#9aa4b2' }
 
+/** Language id -> info, used for stats/charts. */
+const ID_MAP: Record<string, LanguageInfo> = {}
+for (const info of Object.values(EXT_MAP)) {
+  if (!ID_MAP[info.id]) ID_MAP[info.id] = info
+}
+
+export function languageMeta(id: string): LanguageInfo {
+  return ID_MAP[id] ?? { id, label: id.charAt(0).toUpperCase() + id.slice(1), color: TEXT_LANGUAGE.color }
+}
+
 export function detectLanguage(filename: string): LanguageInfo {
   const base = (filename || '').trim().toLowerCase()
   if (!base) return TEXT_LANGUAGE

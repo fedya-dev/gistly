@@ -3,11 +3,13 @@
 import { useEffect, useState } from 'react'
 import { AppFooter } from '@/components/app-footer'
 import { AppHeader } from '@/components/app-header'
+import { CommandPalette } from '@/components/command-palette'
 import { LoginDialog } from '@/components/login-dialog'
 import { LogoMark } from '@/components/logo'
 import { HomeView } from '@/components/views/home-view'
 import { GistView } from '@/components/views/gist-view'
 import { GistFormView } from '@/components/views/gist-form-view'
+import { StatsView } from '@/components/views/stats-view'
 import { useAppRoute, useMounted } from '@/lib/use-route'
 import { useAuth } from '@/lib/auth-store'
 
@@ -16,11 +18,24 @@ export function AppRoot() {
   const mounted = useMounted()
   const [loginOpen, setLoginOpen] = useState(false)
   const [loginNonce, setLoginNonce] = useState(0)
+  const [paletteOpen, setPaletteOpen] = useState(false)
   const refresh = useAuth((s) => s.refresh)
 
   useEffect(() => {
     void refresh()
   }, [refresh])
+
+  // Ctrl/Cmd+K toggles the command palette from anywhere.
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        setPaletteOpen((open) => !open)
+      }
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [])
 
   const openLogin = () => {
     setLoginNonce((n) => n + 1)
@@ -57,6 +72,8 @@ export function AppRoot() {
     )
   } else if (route.isNew) {
     view = <GistFormView nav={nav} />
+  } else if (route.stats) {
+    view = <StatsView nav={nav} />
   } else {
     view = (
       <HomeView
@@ -75,12 +92,18 @@ export function AppRoot() {
       >
         Skip to content
       </a>
-      <AppHeader nav={nav} onOpenLogin={openLogin} />
+      <AppHeader nav={nav} onOpenLogin={openLogin} onOpenPalette={() => setPaletteOpen(true)} />
       <main id="main-content" className="flex-1">
         {view}
       </main>
       <AppFooter />
       <LoginDialog key={loginNonce} open={loginOpen} onOpenChange={setLoginOpen} />
+      <CommandPalette
+        open={paletteOpen}
+        onOpenChange={setPaletteOpen}
+        nav={nav}
+        onOpenLogin={openLogin}
+      />
     </div>
   )
 }

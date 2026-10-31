@@ -1,6 +1,6 @@
 'use client'
 
-import { Github, LogIn, LogOut, Moon, Plus, Sun } from 'lucide-react'
+import { BarChart3, Github, LogIn, LogOut, Moon, Plus, Search, Sun } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { Button } from '@/components/ui/button'
 import {
@@ -20,9 +20,10 @@ import { cn } from '@/lib/utils'
 interface AppHeaderProps {
   nav: Navigation
   onOpenLogin: () => void
+  onOpenPalette: () => void
 }
 
-export function AppHeader({ nav, onOpenLogin }: AppHeaderProps) {
+export function AppHeader({ nav, onOpenLogin, onOpenPalette }: AppHeaderProps) {
   const { t, lang, toggleLang } = useI18n()
   const { isAdmin } = useAuth()
   const { resolvedTheme, setTheme } = useTheme()
@@ -50,9 +51,31 @@ export function AppHeader({ nav, onOpenLogin }: AppHeaderProps) {
           >
             {t('nav.home')}
           </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-muted-foreground hover:text-foreground"
+            onClick={() => nav.stats()}
+          >
+            <BarChart3 className="h-4 w-4" />
+            {t('nav.stats')}
+          </Button>
         </nav>
 
         <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-8 gap-2 rounded-full pr-1.5 font-normal text-muted-foreground hover:text-foreground"
+            onClick={onOpenPalette}
+            aria-label={t('palette.title')}
+            title={t('palette.title')}
+          >
+            <Search className="h-3.5 w-3.5" />
+            <kbd className="pointer-events-none hidden select-none rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground sm:inline-flex sm:items-center">
+              Ctrl K
+            </kbd>
+          </Button>
           <Button
             asChild
             variant="ghost"

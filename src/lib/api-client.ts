@@ -67,6 +67,20 @@ export function listTags() {
   })
 }
 
+export interface StatsDTO {
+  totals: { gists: number; files: number; lines: number; views: number }
+  visibility: Record<string, number>
+  tags: { name: string; count: number }[]
+  languages: { id: string; count: number }[]
+  activity: { date: string; count: number }[]
+  mostViewed: { id: string; title: string; views: number } | null
+  latest: { id: string; title: string; createdAt: string } | null
+}
+
+export function fetchStats() {
+  return request<StatsDTO>('/api/stats', { cache: 'no-store' })
+}
+
 export function fetchGist(id: string, token?: string) {
   const sp = new URLSearchParams()
   if (token) sp.set('t', token)

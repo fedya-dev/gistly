@@ -18,6 +18,9 @@ Gistly is a lightweight, open-source alternative to GitHub Gists / OpenGist that
 - 🔐 **Single-admin mode** — only you (password login) create and edit gists; everyone else just opens links
 - 👁 **Three visibility levels** — *Public* (listed), *Unlisted* (link-only), *Secret* (link + token)
 - 🔎 **Full-text search** and **tags** (`#typescript`, `#sql` …) with a clickable tag cloud
+- 📊 **Insights dashboard** — GitHub-style activity heatmap, language & tag stats, most-viewed and latest gist
+- ⌨️ **Command palette** — press <kbd>Ctrl</kbd>+<kbd>K</kbd> anywhere to search gists and run commands
+- 📄 **Infinite feed** — “Load more” pagination with live result counters
 - 📋 **Copy / Raw / Download** for every file, copy-link button with toast
 - 🌗 **Dark & light theme** (dark by default) and a **EN / BG bilingual interface**
 - 🐳 **Docker-first** — multi-stage image, persistent SQLite volume, `docker compose up -d` and done
@@ -141,6 +144,9 @@ Gistly е лека алтернатива с отворен код на GitHub G
 - 🔐 **Само админ качва** — вход с парола; всички останали само отварят линковете
 - 👁 **Три нива на видимост** — Публичен, Скрит (само с линк), Частен (линк + токен)
 - 🔎 **Търсене** по заглавие, съдържание и тагове + облак от тагове
+- 📊 **Статистика (Insights)** — heatmap на активността в GitHub-стил, разпределение по езици, топ тагове, най-гледан и последен гист
+- ⌨️ **Командна палитра** — <kbd>Ctrl</kbd>+<kbd>K</kbd> навсякъде за търсене на гистове и команди
+- 📄 **Безкрайна лента** — „Зареди още“ пагинация с брояч
 - 📋 **Копирай / Суров / Изтегли** за всеки файл + бутон за копиране на линка
 - 🌗 **Тъмна и светла тема** и **двуезичен интерфейс EN / BG**
 - 🐳 **Docker** — multistage образ, SQLite том, `docker compose up -d`
