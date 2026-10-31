@@ -5,6 +5,12 @@ services:
       # Use the host's network during `docker build`.
       # Fixes hangs on servers where Docker's embedded bridge DNS is broken
       # (bun install stuck with "EAI_AGAIN"). Safe to remove on healthy hosts.
+      #
+      # NOTE: recent Compose versions (2.36+) build via BuildKit Bake, which
+      # requires the network.host entitlement to be granted explicitly, so
+      # `docker compose up -d --build` fails with "additional privileges
+      # requested: pass --allow=network.host". Use ./deploy.sh instead —
+      # it builds with buildx and the right flags, then runs compose.
       network: host
     image: gistly:latest
     container_name: gistly

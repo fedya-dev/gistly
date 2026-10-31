@@ -36,10 +36,19 @@ cd gistly
 echo "ADMIN_PASSWORD=my-strong-password"  > .env
 echo "AUTH_SECRET=$(openssl rand -hex 32)" >> .env
 
-docker compose up -d --build
+chmod +x deploy.sh
+./deploy.sh
 ```
 
 Open **http://localhost:3000** → click **Sign in** → enter your `ADMIN_PASSWORD` (default: `admin`) → create your first gist.
+
+> **Why `./deploy.sh` and not `docker compose up -d --build`?** The build uses
+> the host network (see `docker-compose.yml`), and Compose ≥ 2.36 builds
+> through BuildKit Bake, which fails with
+> `additional privileges requested: pass "--allow=network.host"`.
+> `deploy.sh` builds with `docker buildx build --allow=network.host --network host`
+> and then starts compose. On healthy hosts `docker compose up -d --build`
+> also works.
 
 ## Plain `docker run`
 
@@ -57,10 +66,13 @@ docker run -d --name gistly \
 > **Server with broken Docker networking?** If builds hang at `bun install`
 > with `EAI_AGAIN`, or starting the container fails with iptables errors, your
 > host's Docker bridge/iptables layer is misconfigured (common on Proxmox LXC).
-> Workaround: build and run with the host network —
-> `docker buildx build --allow network.host --network host -t gistly .` and
-> `docker run --network host ...` (drop `-p 3000:3000`), or set
-> `[worker.oci] networkMode = "host"` in `/etc/docker/buildkitd.toml`.
+> Or if Compose ≥ 2.36 stops with `additional privileges requested: pass
+> "--allow=network.host"`. Workaround: use `./deploy.sh`, or build and run
+> with the host network manually —
+> `docker buildx build --allow=network.host --network host -t gistly:latest .`
+> and `docker compose up -d`, or `docker run --network host ...` (drop
+> `-p 3000:3000`), or set `[worker.oci] networkMode = "host"` in
+> `/etc/docker/buildkitd.toml`.
 
 ## Environment variables
 
@@ -85,8 +97,8 @@ Every gist page has a **Copy link** button that copies the full, correct URL for
 
 1. Push this project to a GitHub repository.
 2. On your VPS (Hetzner, DigitalOcean, OVH, a Raspberry Pi…): `git clone` your repo.
-3. `docker compose up -d --build` — that's the whole deployment.
-4. Updates: `git pull && docker compose up -d --build`. Your data survives in the `gistly_data` volume.
+3. `./deploy.sh` — that's the whole deployment.
+4. Updates: `git pull && ./deploy.sh`. Your data survives in the `gistly_data` volume.
 
 ### HTTPS with a reverse proxy
 
@@ -160,16 +172,24 @@ cd gistly
 echo "ADMIN_PASSWORD=силна-парола"          > .env
 echo "AUTH_SECRET=$(openssl rand -hex 32)" >> .env
 
-docker compose up -d --build
+chmod +x deploy.sh
+./deploy.sh
 ```
 
 Отвори **http://localhost:3000** → **Вход** → въведи паролата (по подразбиране: `admin`) → създай първия гист.
 
+> **Защо `./deploy.sh` вместо `docker compose up -d --build`?** Билдът ползва
+> host мрежата (виж `docker-compose.yml`), а Compose ≥ 2.36 билдва през
+> BuildKit Bake и гърми с `additional privileges requested: pass
+> "--allow=network.host"`. `deploy.sh` билдва с
+> `docker buildx build --allow=network.host --network host` и после пуска
+> compose. На здрави хостове и `docker compose up -d --build` работи.
+
 ### Качване в GitHub → деплой където и да е
 
 1. Качи проекта в GitHub хранилище.
-2. На сървъра: `git clone` и после `docker compose up -d --build`.
-3. За обновление: `git pull && docker compose up -d --build`. Данните остават в тома `gistly_data`.
+2. На сървъра: `git clone` и после `./deploy.sh`.
+3. За обновление: `git pull && ./deploy.sh`. Данните остават в тома `gistly_data`.
 4. HTTPS: насочи Caddy/Nginx (примерите по-горе) към порт `3000`.
 
 ### Полезно да знаеш
