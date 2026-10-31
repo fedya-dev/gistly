@@ -11,6 +11,16 @@
 
 Gistly is a lightweight, open-source alternative to GitHub Gists / OpenGist that you can run on **your own server** with a single Docker command. Paste code, get a link, share it. Everything lives in one SQLite file on your machine.
 
+## Screenshots
+
+| | |
+| --- | --- |
+| ![Home — dark](docs/screenshots/home-dark.png) | ![Gist page](docs/screenshots/gist.png) |
+| ![Insights dashboard](docs/screenshots/insights.png) | ![Command palette — Ctrl+K](docs/screenshots/palette.png) |
+| ![New gist editor](docs/screenshots/editor.png) | ![Home — light](docs/screenshots/home-light.png) |
+
+<p align="center"><img src="docs/screenshots/mobile.png" width="280" alt="Mobile view" /></p>
+
 ## Features
 
 - 🎨 **Syntax highlighting** — Shiki with the official GitHub Light & GitHub Dark themes, 40+ languages, line numbers, soft-wrap toggle
@@ -150,6 +160,16 @@ Next.js 16 · TypeScript · Tailwind CSS 4 · shadcn/ui · Prisma + SQLite · Sh
 **English** above · [Back to top](#gistly)
 
 Gistly е лека алтернатива с отворен код на GitHub Gists / OpenGist, която работи на **твоя сървър** с една Docker команда. Поставяш код, получаваш линк, споделяш го. Всичко се съхранява в един SQLite файл на твоята машина.
+
+### Скрийншоти
+
+| | |
+| --- | --- |
+| ![Начало — тъмна тема](docs/screenshots/home-dark.png) | ![Преглед на гист](docs/screenshots/gist.png) |
+| ![Статистика](docs/screenshots/insights.png) | ![Командна палитра — Ctrl+K](docs/screenshots/palette.png) |
+| ![Редактор](docs/screenshots/editor.png) | ![Начало — светла тема](docs/screenshots/home-light.png) |
+
+<p align="center"><img src="docs/screenshots/mobile.png" width="280" alt="Мобилен изглед" /></p>
 
 ### Възможности
 
